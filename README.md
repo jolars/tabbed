@@ -5,28 +5,13 @@
 
 ## A Python package for reading variably structured text files at scale
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15847863.svg)](
-https://doi.org/10.5281/zenodo.15847863
-)
-[![Documentation](
-https://img.shields.io/badge/github.io-Documentation-seagreen)](
-https://mscaudill.github.io/tabbed/
-)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15847863.svg)](https://doi.org/10.5281/zenodo.15847863)
+[![Documentation](https://img.shields.io/badge/github.io-Documentation-seagreen)](https://mscaudill.github.io/tabbed/)
 ![Python version](https://img.shields.io/badge/Python-%3E%3D3.12-goldenrod)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](
-https://github.com/psf/black
-)
-[![pytest](
-https://github.com/mscaudill/tabbed/actions/workflows/testing.yml/badge.svg)](
-https://github.com/mscaudill/tabbed/actions/workflows/testing.yml
-)
-[![Coverage](
-https://coveralls.io/repos/github/mscaudill/tabbed/badge.svg?branch=master)](
-https://coveralls.io/github/mscaudill/tabbed?branch=master
-)
-![PyPI - License](
-https://img.shields.io/pypi/l/tabbed?color=darkmagenta
-)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![pytest](https://github.com/mscaudill/tabbed/actions/workflows/testing.yml/badge.svg)](https://github.com/mscaudill/tabbed/actions/workflows/testing.yml)
+[![Coverage](https://coveralls.io/repos/github/mscaudill/tabbed/badge.svg?branch=master)](https://coveralls.io/github/mscaudill/tabbed?branch=master)
+![PyPI - License](https://img.shields.io/pypi/l/tabbed?color=darkmagenta)
 
 **Tabbed** is a Python library for reading variably structured text files. It
 automatically deduces data start locations, data types and performs iterative
@@ -40,36 +25,36 @@ and value-based conditional reading of data rows.
 | [**Contributing**](#contributing)
 | [**Acknowledgments**](acknowledgements)
 
------------------
+---
 
 ## Key Features
 
 - **Structural Inference:**  
-A common variant of the
-[standard](https://datatracker.ietf.org/doc/html/rfc4180) text file is one that
-contains *metadata* prior to a header or data section. Tabbed can locate the
-metadata, header and data locations in a file.
+  A common variant of the
+  [standard](https://datatracker.ietf.org/doc/html/rfc4180) text file is one that
+  contains _metadata_ prior to a header or data section. Tabbed can locate the
+  metadata, header and data locations in a file.
 
 - **Type inference:**  
-Tabbed can parse `int`, `float`, `complex`, `time`, `date` and `datetime`
-instances at high-speed via a polling strategy.
+  Tabbed can parse `int`, `float`, `complex`, `time`, `date` and `datetime`
+  instances at high-speed via a polling strategy.
 
 - **Conditional Reading:**  
-Tabbed can filter rows during reading with equality, membership, rich
-comparison, regular expression matching and custom callables via simple keyword
-arguments.
+  Tabbed can filter rows during reading with equality, membership, rich
+  comparison, regular expression matching and custom callables via simple keyword
+  arguments.
 
 - **Partial and Iterative Reading:**  
-Tabbed supports reading of large text files that consumes only as much memory as
-you choose.
-
+  Tabbed supports reading of large text files that consumes only as much memory as
+  you choose.
 
 ## Usage
 
-Below is a sample file with a *Metadata* section and *Header* using the tab
+Below is a sample file with a _Metadata_ section and _Header_ using the tab
 character as the delimiter.
 
 **annotations.txt**
+
 ```AsciiDoc
 Experiment ID Experiment
 Animal ID Animal
@@ -92,24 +77,23 @@ Number Start Time End Time Time From Start Channel Annotation
 
 **Dialect and Type Inference**
 
-Tabbed can detect the dialect via [clevercsv](
-https://clevercsv.readthedocs.io/en/latest/)  and infer the data types.
+Tabbed can detect the dialect via [clevercsv](https://clevercsv.readthedocs.io/en/latest/) and infer the data types.
 
 ```python
 from tabbed.reading import Reader
 from tabbed.samples import paths
 
-infile = open(paths.annotations, 'r')
+infile = open(paths.annotations, "r")
 reader = Reader(infile)
-dialect = reader.sniffer.dialect
-types, _ = reader.sniffer.types(poll=10)
-    
-print(dialect) # a clevercsv SimpleDialect
-print('---')
+m = reader.metadata()
+
+print(dialect)  # a clevercsv SimpleDialect
+print("---")
 print(types)
 ```
 
-*Output*
+_Output_
+
 ```
 SimpleDialect('\t', '"', None)
 ---
@@ -122,11 +106,17 @@ Tabbed can automatically locate the metadata, header and data rows.
 
 ```python
 print(reader.header)
-print('---')
+print("---")
 print(reader.metadata())
+
+m = reader.metadata()
+
+for line in m.lines:
+    print(f"Line {line}: {m.string.splitlines()[line]}")
 ```
 
-*Output*
+_Output_
+
 ```
 Header(line=6,
        names=['Number', 'Start_Time', 'End_Time', 'Time_From_Start', 'Channel', 'Annotation'],
@@ -148,8 +138,8 @@ from itertools import chain
 # tab rows whose Start_Time is between 9:38 and 9:40 and set reader to read
 # only the Number and Start_Time columns
 reader.tab(
-    Start_Time='>= 2/09/2022 9:38:00 and <2/09/2022 9:40:00',
-    columns=['Number', 'Start_Time']
+    Start_Time=">= 2/09/2022 9:38:00 and <2/09/2022 9:40:00",
+    columns=["Number", "Start_Time"],
 )
 
 # read the data to an iterator reading only 2 rows at a time
@@ -163,7 +153,8 @@ print(data)
 reader.close()
 ```
 
-*Output*
+_Output_
+
 ```
 {'Number': 5, 'Start_Time': datetime.datetime(2022, 2, 9, 9, 38, 1, 262000)}
 {'Number': 6, 'Start_Time': datetime.datetime(2022, 2, 9, 9, 38, 7, 909000)}
@@ -172,14 +163,13 @@ reader.close()
 ```
 
 ## Documentation
+
 The official documentation is hosted on [github.io](https://mscaudill.github.io/tabbed/).
 
-
 ## Dependencies
-Tabbed depends on the excellent [clevercsv](
-https://clevercsv.readthedocs.io/en/latest/) package for dialect detection. The
-rest is pure Python.
 
+Tabbed depends on the excellent [clevercsv](https://clevercsv.readthedocs.io/en/latest/) package for dialect detection. The
+rest is pure Python.
 
 ## Installation
 
@@ -197,7 +187,8 @@ repository
 git clone git@github.com:mscaudill/tabbed.git
 ```
 
-Go to the directory you just cloned and create an *editable install* with pip.
+Go to the directory you just cloned and create an _editable install_ with pip.
+
 ```bash
 pip install -e .[dev]
 ```
@@ -205,16 +196,14 @@ pip install -e .[dev]
 ## Contributing
 
 We're excited you want to contribute! Please check out our
-[Contribution](
-https://github.com/mscaudill/tabbed/blob/master/.github/CONTRIBUTING.md) guide.
-
+[Contribution](https://github.com/mscaudill/tabbed/blob/master/.github/CONTRIBUTING.md) guide.
 
 ## Acknowledgements
 
-------
+---
 
 **We are grateful for the support of the Ting Tsung and Wei Fong Chao
 Foundation and the Jan and Dan Duncan Neurological Research Institute at
 Texas Children's that generously supports Tabbed.**
 
-------
+---

@@ -453,9 +453,9 @@ class Reader(ReprMixin):
     # pylint: disable-next=too-many-positional-arguments
     def read(
         self,
-        start: Optional[int] = None,
-        skips: Optional[Sequence[int]] = None,
-        indices: Optional[Sequence] = None,
+        start: int | None,
+        skips: Sequence[int] | None,
+        indices: Sequence = None,
         chunksize: int = int(2e5),
         skip_empty: bool = True,
         raise_ragged: bool = False,
